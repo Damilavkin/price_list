@@ -33,17 +33,21 @@ class PriceMachine:
 
     def _load_file(self, file_path):
         try:
-            df = pd.read_csv(file_path, encoding='utf-8-sig', delimiter=';')
+            df = pd.read_csv(file_path, encoding='utf-8-sig', delimiter=',')
+            print(f"Заголовки для файла {file_path}: {df.columns.tolist()}")  # Вывод заголовков
 
             # Определяем возможные названия столбцов
-            name_variants = ["название", "продукт", "товар", "наименование"]
-            price_variants = ["цена", "розница"]
-            weight_variants = ["фасовка", "масса", "вес"]
+            valid_name_variants = ["название", "продукт", "товар", "наименование"]
+            valid_price_variants = ["цена", "розница"]
+            valid_weight_variants = ["фасовка", "масса", "вес"]
 
-            # Ищем имена действительных столбцов по их вариантам
-            name_col = next((col for col in df.columns if col.lower() in name_variants), None)
-            price_col = next((col for col in df.columns if col.lower() in price_variants), None)
-            weight_col = next((col for col in df.columns if col.lower() in weight_variants), None)
+            # Очищаем заголовки: убираем лишние символы
+            cleaned_headers = [col.strip().lower().replace('#', '').replace(',,', '') for col in df.columns]
+
+            # Ищем имена действительных столбцов в очищенных заголовках
+            name_col = next((col for col in cleaned_headers if col in valid_name_variants), None)
+            price_col = next((col for col in cleaned_headers if col in valid_price_variants), None)
+            weight_col = next((col for col in cleaned_headers if col in valid_weight_variants), None)
 
             if name_col is None:
                 print(f"Не удалось найти столбец с названием товара в файле: {file_path}")
