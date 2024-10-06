@@ -103,6 +103,7 @@ class PriceMachine:
             Экспортирует данные в HTML файл
         '''
         result = '''
+        <meta charset="UTF-8">
         <!DOCTYPE html>
         <html>
         <head>
